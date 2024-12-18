@@ -23,6 +23,6 @@ if (process.env.NODE_ENV === 'production') {
 }
 // Function to start server and handle port conflicts
 
-const PORT = process.env.PORT || 5025;
+const PORT = process.env.PORT || 5035;
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
