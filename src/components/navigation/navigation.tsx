@@ -1,8 +1,11 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import Box from "@mui/material/Box";
 import { navigations } from "./navigation.data";
 import { Link } from "@mui/material";
 import { useLocation } from "react-router-dom";
+import { ethers } from "ethers";
+
+
 
 type NavigationData = {
   path: string;
@@ -12,6 +15,32 @@ type NavigationData = {
 const Navigation: FC = () => {
   const location = useLocation();
   const currentPath = location.pathname;
+  const [address, setaddress] = useState(null)
+
+  const wallet = async () => {
+    let signer = null;
+
+    let provider;
+    if (window.ethereum == null) {
+
+      // If MetaMask is not installed, we use the default provider,
+      // which is backed by a variety of third-party services (such
+      // as INFURA). They do not have private keys installed,
+      // so they only have read-only access
+      console.log("MetaMask not installed; using read-only defaults")
+      provider = ethers.getDefaultProvider()
+
+    } else {
+
+
+      provider = new ethers.BrowserProvider(window.ethereum)
+
+
+      signer = await provider.getSigner();
+      console.log(signer)
+      setaddress(signer.address)
+    }
+  }
 
   return (
     <Box
@@ -77,15 +106,16 @@ const Navigation: FC = () => {
           justifyContent: "center",
           px: { xs: 0, lg: 3 },
           mb: { xs: 3, lg: 0 },
-          fontSize: "24px",
+          fontSize: "12px",
           lineHeight: "6px",
           width: "324px",
           height: "45px",
           borderRadius: "6px",
           backgroundColor: "#00dbe3"
         }}
+        onClick={wallet}
       >
-        Connect Wallet
+        {address ? address : "Connect Wallet"}
       </Box>
     </Box>
   );
